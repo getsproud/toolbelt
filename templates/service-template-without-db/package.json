@@ -1,0 +1,52 @@
+{
+  "name": "@employeehq/service-{{ serviceName }}",
+  "version": "0.1.0",
+  "description": "{{ serviceName }} microservice for employeehq.io",
+  "main": "build/main.js",
+  "author": "Dominic Rico Gómez <rico@employeehq.io>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dominicrico/employeehq.git"
+  },
+  "scripts": {
+    "build:k8s": "babel src -d dist -w --copy-files --delete-dir-on-start && eval $(minikube docker-env) && docker build . -t 'employeehq/{{ serviceName }}' --build-arg $(grep NPM_TOKEN ../../.env)",
+    "build": "babel src -d dist -w --copy-files --delete-dir-on-start",
+    "clean": "node -e 'require(\"rimraf\")(\"./dist\", () => {})'",
+    "start": "node main.js",
+    "pretest": "babel src -d dist --copy-files",
+    "test": "mocha --recursive \"./test/*.js\"",
+    "lint": "eslint . -c .eslintrc --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint",
+    "dev:k8s": "nodemon --exec npm run build:k8s",
+    "dev:local": "nodemon --exec \"npm run clean && npm run build\"",
+    "precommit": "lint-staged"
+  },
+  "dependencies": {
+    "@employeehq/utils": "^0.6.2",
+    "cote": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "lint-staged": "^10.5.1",
+    "mocha": "^8.2.0",
+    "mocha-jenkins-reporter": "^0.4.5",
+    "nodemon": "^2.0.6"
+  },
+  "nodemonConfig": {
+    "verbose": true,
+    "ignore": ["test/*", "docs/*", "dist/*", "deployments/*"]
+  },
+  "engines": {
+    "node": ">= 14.15.0"
+  }
+}

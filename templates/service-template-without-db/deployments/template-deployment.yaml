@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: employeehq
+  name: {{ serviceName }}-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ serviceName }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ serviceName }}-app
+    spec:
+      containers:
+      - name: {{ serviceName }}-container
+        image: employeehq/{{ serviceName }}:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080

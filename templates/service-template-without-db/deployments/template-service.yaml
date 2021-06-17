@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: employeehq
+  name: {{ serviceName }}-service
+spec:
+  type: NodePort
+  selector:
+    app: {{ serviceName }}-app
+  ports:
+  - name: {{ serviceName }}-service
+    protocol: TCP
+    port: 8080
